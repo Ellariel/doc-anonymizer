@@ -9,6 +9,7 @@
 #!apt-get install poppler-utils
 #!pip install pdf2image
 import os
+import tempfile
 import fitz
 from webcolors import name_to_rgb
 
