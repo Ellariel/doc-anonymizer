@@ -2,9 +2,9 @@ from matplotlib import pyplot as plt
 import re
 
 # Наши модули
-from tesseract_utils import get_text_corpus
-from recognition_full_name import extract_full_name
-from tesseract_utils import get_text_corpus, get_jpg_anon
+from .tesseract_utils import get_text_corpus
+from .recognition_full_name import extract_full_name
+from .tesseract_utils import get_text_corpus, get_jpg_anon
 
 
 
