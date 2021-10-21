@@ -54,3 +54,37 @@ def anonymize_pdf(in_file, out_file, text, color='green', filled=True): #соз�
                 page.insert_image(highlight.rect, pixmap=pix, keep_proportion=False, overlay=filled) #помещает на каждый мркер картинку
         doc.save(out_file, garbage=4, deflate=True, clean=True)
         return os.path.exists(out_file)
+
+def _anonymize_pdf(in_file, out_file, substring_list, color='green', filled=True): #создаёт новый файл pdf
+        pix = fitz.Pixmap(fitz.csRGB, (0, 0, 300, 300), 0) #просто создается картинка, которая затем помещается на текст
+        pix.set_rect(pix.irect, name_to_rgb(color)) #поэтому лучше это вынестив инициализацию, чтобы не плодить сущности
+        doc = fitz.open(in_file)
+        for substring in substring_list:
+          if len(substring) > 0:
+            for page in doc:
+                text_instances = page.search_for(substring) #ищет все совпадение и для каждого использует маркер
+                for inst in text_instances:
+                    highlight = page.add_highlight_annot(inst)
+                    page.insert_image(highlight.rect, pixmap=pix, keep_proportion=False, overlay=filled) #помещает на каждый мркер картинку
+        doc.save(out_file, garbage=4, deflate=True, clean=True)
+        return os.path.exists(out_file)
+
+def proccess_docfile(in_file, substring_list, color='green', filled=True, dpi=300):
+    filename = os.path.basename(in_file)
+    name, ext = os.path.splitext(filename)
+    if not ext.lower() in ['.doc', '.docx', '.xls', '.xlsx', '.rtf', '.txt']:
+      #raise Exception('Inappropriate file format..')
+      print('Inappropriate file format')
+      return
+    if not substring_list:
+      #raise Exception('No substrings..')
+      print('No substrings..')
+      return
+    with tempfile.TemporaryDirectory() as tmppath: #временная папка удаляется при выходе из контекста
+      if convert_to_pdf(in_file, tmppath):
+        old_pdf = os.path.join(tmppath, name + '.pdf')
+        new_pdf = os.path.join(tmppath, str(uuid.uuid4()) + '.pdf')
+        if _anonymize_pdf(old_pdf, new_pdf, substring_list=substring_list, color=color, filled=filled): 
+          return _convert_to_jpg(new_pdf, dpi=dpi)
+      else:
+        raise Exception('convert_to_pdf error')
