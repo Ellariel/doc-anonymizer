@@ -1,4 +1,3 @@
-import os
 from setuptools import setup
 
 with open('requirements.txt') as f:
@@ -20,8 +19,8 @@ setup(
     #    "Bug Tracker": "https://github.com/CAG-ru/anonymizer/issues"
     #},
     license='Apache',
-    include_package_data=True,
-    package_data={'anonymizer': ['anonymizer/*.json', '*.json']},
-    packages=['anonymizer'],
+#    include_package_data=True,
+#    package_data={'anonymizer': ['anonymizer/*.json', '*.json']},
+#    packages=['anonymizer'],
     install_requires=required, #install_requires=['requests', 'pandas'],
 )
