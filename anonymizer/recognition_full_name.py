@@ -8,7 +8,7 @@ import spacy
 import re
 
 
-def extract_full_name(corpus, lib):
+def extract_full_name(corpus, lib='stanza'):
     
     corpus = preprocess_text(corpus)
     
