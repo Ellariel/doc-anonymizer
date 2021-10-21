@@ -38,6 +38,9 @@ def convert_to_jpg(in_file, out_path='', dpi=300): #помещает файлы 
             images[i].save(filename, 'JPEG')
             files.append(filename)
         return files
+
+def _convert_to_jpg(in_file, dpi=300):
+        return convert_from_path(in_file, dpi=dpi)
   
 
 def anonymize_pdf(in_file, out_file, text, color='green', filled=True): #создаёт новый файл pdf
