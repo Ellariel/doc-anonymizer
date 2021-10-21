@@ -1,13 +1,13 @@
 import os
-import setuptools
+from setuptools import setup
 
-with open("requirements.txt", "r", encoding="utf-8") as f:
+with open('requirements.txt') as f:
     required = f.read().splitlines()  
       
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-setuptools.setup(
+setup(
     name='anonymizer',
     version='1.0',
     author='INID',
