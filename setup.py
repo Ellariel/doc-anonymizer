@@ -7,7 +7,7 @@ with open("requirements.txt", "r", encoding="utf-8") as f:
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-  setuptools.setup(
+setuptools.setup(
     name='anonymizer',
     version='1.0',
     author='INID',
