@@ -1,7 +1,7 @@
 matplotlib
 regex
 fitz
-webcolor
+webcolors
 shortuuid
 stanza
 spacy
