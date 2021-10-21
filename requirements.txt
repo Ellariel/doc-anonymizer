@@ -12,4 +12,4 @@ pathlib
 pandas
 poppler-utils
 pymupdf
-tempfile
+temp
