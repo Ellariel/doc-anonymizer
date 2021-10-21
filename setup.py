@@ -1,7 +1,7 @@
 import os
 import setuptools
 
-with open('requirements.txt') as f:
+with open("requirements.txt", "r", encoding="utf-8") as f:
     required = f.read().splitlines()  
       
 with open("README.md", "r", encoding="utf-8") as fh:
