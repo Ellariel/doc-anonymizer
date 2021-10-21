@@ -10,3 +10,5 @@ opencv-python
 pdf2image
 pathlib
 pandas
+poppler-utils
+pymupdf
