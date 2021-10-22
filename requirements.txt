@@ -1,5 +1,4 @@
-matplotlib
-regex
+pymupdf
 fitz
 webcolors
 shortuuid
@@ -11,7 +10,8 @@ pdf2image
 pathlib
 pandas
 poppler-utils
-pymupdf
 temp
 pillow
 textract
+matplotlib
+regex
