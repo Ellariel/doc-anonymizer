@@ -32,7 +32,6 @@ def convert_to_pdf(in_file, path=''): #помещает файл с тем же 
         pdf = os.path.join(path, name + '.pdf')
         return os.path.exists(pdf)
 
-
 def convert_to_jpg(in_file, out_path='', dpi=300): #помещает файлы картинок в папку и возвращает их список (каждая страница pdf в отдельном файле)
         images = convert_from_path(in_file, dpi=dpi)#, output_folder=path, dpi=300, output_file=str(uuid.uuid4()), use_pdftocairo=True)
         #print(len(images))
@@ -42,10 +41,6 @@ def convert_to_jpg(in_file, out_path='', dpi=300): #помещает файлы 
             images[i].save(filename, 'JPEG')
             files.append(filename)
         return files
-
-def _convert_to_jpg(in_file, dpi=300):
-        return convert_from_path(in_file, dpi=dpi)
-  
 
 def anonymize_pdf(in_file, out_file, text, color='green', filled=True): #создаёт новый файл pdf
         pix = fitz.Pixmap(fitz.csRGB, (0, 0, 300, 300), 0) #просто создается картинка, которая затем помещается на текст
@@ -73,21 +68,36 @@ def _anonymize_pdf(in_file, out_file, substring_list, color='green', filled=True
         doc.save(out_file, garbage=4, deflate=True, clean=True)
         return os.path.exists(out_file)
 
+def _convert_to_pdf(in_file, path=''): #помещает файл с тем же именем, но новым расширением pdf в папку
+        filename = os.path.basename(in_file)
+        name, _ = os.path.splitext(filename)
+        args = ['libreoffice', '--headless', '--convert-to', 'pdf', '--outdir', path, in_file]
+        process = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=None)
+        print(process.stdout.decode())
+        pdf = os.path.join(path, name + '.pdf')
+        return os.path.exists(pdf), pdf
+
+def _convert_to_jpg(in_file, dpi=300):
+        return convert_from_path(in_file, dpi=dpi)
+
 def proccess_docfile(in_file, substring_list, color='green', filled=True, dpi=300):
-    filename = os.path.basename(in_file)
-    name, ext = os.path.splitext(filename)
-    if not ext.lower() in ['.doc', '.docx', '.xls', '.xlsx', '.rtf', '.txt']:
-      warnings.warn(f'{ext} - Inappropriate file format.')
-      #raise Exception('Inappropriate file format..')
-      #print('Inappropriate file format')
-      return
+    #всякие проверки
+    if not os.path.exists(in_file):
+      raise Exception('No file exist..')
+
     if not substring_list:
       raise Exception('No substrings in list..')
-      #print('No substrings..')
-      #return
+
+    _, ext = os.path.splitext(os.path.basename(in_file))
+    if not ext.lower() in ['.doc', '.docx', '.xls', '.xlsx', '.rtf', '.txt']:
+      warnings.warn(f'{ext} - Inappropriate file format.')
+      #print('Inappropriate file format')
+      return
+
+    #Процесс пошёл..
     with tempfile.TemporaryDirectory() as tmppath: #временная папка удаляется при выходе из контекста
-      if convert_to_pdf(in_file, tmppath):
-        old_pdf = os.path.join(tmppath, name + '.pdf')
+      ok, old_pdf = _convert_to_pdf(in_file, tmppath)  
+      if ok:
         new_pdf = os.path.join(tmppath, str(uuid.uuid4()) + '.pdf')
         if _anonymize_pdf(old_pdf, new_pdf, substring_list=substring_list, color=color, filled=filled): 
           return _convert_to_jpg(new_pdf, dpi=dpi)
