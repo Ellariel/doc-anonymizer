@@ -24,11 +24,13 @@ import os
 import warnings
 
 def convert_to_pdf(in_file, path=''): #помещает файл с тем же именем, но новым расширением pdf в папку
+        filename = os.path.basename(in_file)
+        name, _ = os.path.splitext(filename)
         args = ['libreoffice', '--headless', '--convert-to', 'pdf', '--outdir', path, in_file]
         process = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=None)
-        #print(process.stdout.decode())
-        filename = re.search('-> (.pdf) using filter', process.stdout.decode())
-        return filename is None
+        print(process.stdout.decode())
+        pdf = os.path.join(path, name + '.pdf')
+        return os.path.exists(pdf)
 
 
 def convert_to_jpg(in_file, out_path='', dpi=300): #помещает файлы картинок в папку и возвращает их список (каждая страница pdf в отдельном файле)
