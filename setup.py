@@ -25,5 +25,5 @@ setup(
     install_requires=required, #install_requires=['requests', 'pandas'],
 )
 
-import stanza
-stanza.download('ru')
+#import stanza
+#stanza.download('ru')
