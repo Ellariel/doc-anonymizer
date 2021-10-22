@@ -1,6 +1,5 @@
 matplotlib
 regex
-textract
 fitz
 webcolors
 shortuuid
@@ -15,3 +14,4 @@ poppler-utils
 pymupdf
 temp
 pillow
+textract
