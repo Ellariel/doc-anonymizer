@@ -24,6 +24,7 @@ import os
 import warnings
 
 from .recognition_full_name import extract_full_name
+from юtesseract_utils import get_text_corpus_doc
 
 def convert_to_pdf(in_file, path=''): #помещает файл с тем же именем, но новым расширением pdf в папку
         filename = os.path.basename(in_file)
@@ -81,6 +82,11 @@ def _convert_to_pdf(in_file, path=''): #помещает файл с тем же
 
 def _convert_to_jpg(in_file, dpi=300):
         return convert_from_path(in_file, dpi=dpi, fmt='jpeg')
+
+def anonymizer_doc(path):
+    text_corpus = get_text_corpus_doc(path):
+    full_name_list = extract_full_name(text_corpus)
+    return proccess_docfile(path, full_name_list, color='green', filled=True, dpi=200) 
 
 def proccess_docfile(in_file, substring_list, color='green', filled=True, dpi=300):
     #всякие проверки
