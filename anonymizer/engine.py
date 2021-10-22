@@ -17,7 +17,7 @@ def anonymizer(path_to_img):
     text_corpus, coordinates = get_text_corpus(img)
     
     # Получаю список ФИО
-    full_name_list = extract_full_name(text_corpus)
+    full_name_list, _ = extract_full_name(text_corpus)
     
     # Получаю таблицу координат NER-объектов
     full_name_coordinates = get_full_name_coordinates(full_name_list, coordinates)
