@@ -2,12 +2,16 @@
 #!!add-apt-repository ppa:libreoffice/ppa && sudo apt-get update
 #!!apt-get install unoconv
 #Для анонимайзера
-#!!pip install --upgrade --force-reinstall fitz
+#!!pip install fitz webcolors
 #!!pip install --upgrade --force-reinstall pymupdf
-#!!pip install webcolors
 #Для конвертера pdf2jpg
 #!apt-get install poppler-utils
 #!pip install pdf2image
+#Тексттрак
+#!pip install textract
+
+import textract
+
 import os
 import tempfile
 import fitz
@@ -24,7 +28,6 @@ import os
 import warnings
 
 from .recognition_full_name import extract_full_name
-from юtesseract_utils import get_text_corpus_doc
 
 def convert_to_pdf(in_file, path=''): #помещает файл с тем же именем, но новым расширением pdf в папку
         filename = os.path.basename(in_file)
@@ -84,11 +87,10 @@ def _convert_to_jpg(in_file, dpi=300):
         return convert_from_path(in_file, dpi=dpi, fmt='jpeg')
 
 def anonymizer_doc(path):
-    text_corpus = get_text_corpus_doc(path):
-    full_name_list = extract_full_name(text_corpus)
-    return proccess_docfile(path, full_name_list, color='green', filled=True, dpi=200) 
+    #return proccess_doc(path) #переводит doc->pdf->jpg и дальше по основной ветке
+    return proccess_docfile(path, color='green', filled=True, dpi=200)
 
-def proccess_docfile(in_file, substring_list, color='green', filled=True, dpi=300):
+def proccess_docfile(in_file, color='green', filled=True, dpi=300):
     #всякие проверки
     if not os.path.exists(in_file):
       raise Exception('No file exist..')
@@ -105,9 +107,36 @@ def proccess_docfile(in_file, substring_list, color='green', filled=True, dpi=30
     #Процесс пошёл..
     with tempfile.TemporaryDirectory() as tmppath: #временная папка удаляется при выходе из контекста
       ok, old_pdf = _convert_to_pdf(in_file, tmppath)  
-      if ok:
+      if ok: 
+        corpus = textract.process(old_pdf, language='rus').decode('utf-8') 
+        name_list = extract_full_name(corpus)
         new_pdf = os.path.join(tmppath, str(uuid.uuid4()) + '.pdf')
-        if _anonymize_pdf(old_pdf, new_pdf, substring_list=substring_list, color=color, filled=filled): 
+        if _anonymize_pdf(old_pdf, new_pdf, substring_list=name_list, color=color, filled=filled): 
           return _convert_to_jpg(new_pdf, dpi=dpi)
+      else:
+        raise Exception('convert_to_pdf error')
+       
+
+def proccess_doc(in_file, color='green', filled=True, dpi=300):
+    #всякие проверки
+    if not os.path.exists(in_file):
+      raise Exception('No file exist..')
+
+    #if not substring_list:
+    #  raise Exception('No substrings in list..')
+
+    _, ext = os.path.splitext(os.path.basename(in_file))
+    if not ext.lower() in ['.doc', '.docx', '.xls', '.xlsx', '.rtf', '.txt']:
+      warnings.warn(f'{ext} - Inappropriate file format.')
+      #print('Inappropriate file format')
+      return
+
+    #Процесс пошёл..
+    with tempfile.TemporaryDirectory() as tmppath: #временная папка удаляется при выходе из контекста
+      ok, old_pdf = _convert_to_pdf(in_file, tmppath)  
+      if ok:
+        img_array_list = pdf_to_img(old_pdf)
+        img_array_list_anon = anonymizer_img_list(img_array_list)
+        return img_array_list_anon
       else:
         raise Exception('convert_to_pdf error')
