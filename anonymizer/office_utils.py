@@ -21,6 +21,7 @@ from pdf2image import convert_from_path
 import uuid
 import os
 
+import warnings
 
 def convert_to_pdf(in_file, path=''): #помещает файл с тем же именем, но новым расширением pdf в папку
         args = ['libreoffice', '--headless', '--convert-to', 'pdf', '--outdir', path, in_file]
@@ -74,13 +75,14 @@ def proccess_docfile(in_file, substring_list, color='green', filled=True, dpi=30
     filename = os.path.basename(in_file)
     name, ext = os.path.splitext(filename)
     if not ext.lower() in ['.doc', '.docx', '.xls', '.xlsx', '.rtf', '.txt']:
+      warnings.warn(f'{ext} - Inappropriate file format.')
       #raise Exception('Inappropriate file format..')
-      print('Inappropriate file format')
+      #print('Inappropriate file format')
       return
     if not substring_list:
-      #raise Exception('No substrings..')
-      print('No substrings..')
-      return
+      raise Exception('No substrings in list..')
+      #print('No substrings..')
+      #return
     with tempfile.TemporaryDirectory() as tmppath: #временная папка удаляется при выходе из контекста
       if convert_to_pdf(in_file, tmppath):
         old_pdf = os.path.join(tmppath, name + '.pdf')
