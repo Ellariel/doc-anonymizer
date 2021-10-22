@@ -23,6 +23,8 @@ import os
 
 import warnings
 
+from .recognition_full_name import extract_full_name
+
 def convert_to_pdf(in_file, path=''): #помещает файл с тем же именем, но новым расширением pdf в папку
         filename = os.path.basename(in_file)
         name, _ = os.path.splitext(filename)
@@ -78,7 +80,7 @@ def _convert_to_pdf(in_file, path=''): #помещает файл с тем же
         return os.path.exists(pdf), pdf
 
 def _convert_to_jpg(in_file, dpi=300):
-        return convert_from_path(in_file, dpi=dpi)
+        return convert_from_path(in_file, dpi=dpi, fmt='jpeg')
 
 def proccess_docfile(in_file, substring_list, color='green', filled=True, dpi=300):
     #всякие проверки
