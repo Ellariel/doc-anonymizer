@@ -1,5 +1,6 @@
 matplotlib
 regex
+textract
 fitz
 webcolors
 shortuuid
