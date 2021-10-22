@@ -13,3 +13,4 @@ pandas
 poppler-utils
 pymupdf
 temp
+pillow
