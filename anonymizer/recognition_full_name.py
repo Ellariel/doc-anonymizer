@@ -1,5 +1,5 @@
 import stanza
-stanza.download('ru')
+#stanza.download('ru')
 
 import spacy
 # !python3 -m spacy download ru_core_news_sm
