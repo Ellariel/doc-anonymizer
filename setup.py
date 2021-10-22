@@ -24,3 +24,6 @@ setup(
     packages=['anonymizer'],
     install_requires=required, #install_requires=['requests', 'pandas'],
 )
+
+import stanza
+stanza.download('ru')
