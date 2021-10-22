@@ -95,8 +95,8 @@ def proccess_docfile(in_file, color='green', filled=True, dpi=300):
     if not os.path.exists(in_file):
       raise Exception('No file exist..')
 
-    if not substring_list:
-      raise Exception('No substrings in list..')
+    #if not substring_list:
+    #  raise Exception('No substrings in list..')
 
     _, ext = os.path.splitext(os.path.basename(in_file))
     if not ext.lower() in ['.doc', '.docx', '.xls', '.xlsx', '.rtf', '.txt']:
