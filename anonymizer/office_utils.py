@@ -109,7 +109,7 @@ def proccess_docfile(in_file, color='green', filled=True, dpi=300):
       ok, old_pdf = _convert_to_pdf(in_file, tmppath)  
       if ok: 
         corpus = textract.process(old_pdf, language='rus').decode('utf-8') 
-        name_list = extract_full_name(corpus)
+        name_list, _ = extract_full_name(corpus)
         new_pdf = os.path.join(tmppath, str(uuid.uuid4()) + '.pdf')
         if _anonymize_pdf(old_pdf, new_pdf, substring_list=name_list, color=color, filled=filled): 
           return _convert_to_jpg(new_pdf, dpi=dpi)
