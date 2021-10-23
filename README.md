@@ -22,6 +22,12 @@ from engine import anonymizer
 result = anonymizer('sample.pdf')
 ```
 
+Необходимые пакеты указаны в requirements.txt, в случае конфикта версий, рекомендуется обновить *pymupdf*
+```shell
+pip install --upgrade --force-reinstall pymupdf
+```
+Рекомендуется использовать dockerfile, имеющийся в репозитории.
+
 ### Используемые технологии
 
 * Tesseract (Apache 2.0)
