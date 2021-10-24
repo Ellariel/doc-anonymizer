@@ -28,7 +28,7 @@ pip install --upgrade --force-reinstall pymupdf
 ```
 Рекомендуется использовать dockerfile, имеющийся в репозитории.
 
-### Используемые технологии
+### Основные используемые технологии
 
 * Tesseract (Apache 2.0)
 * Textract (MIT License)
